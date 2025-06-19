@@ -11,9 +11,9 @@ namespace ProductCrudMinimalApi.EndPoints
         {
             //Get All Products
 
-            app.MapGet("/api/products", async (AppDbContext db) =>
+            app.MapGet("/api/products", async (AppDbContext db, int pageNumber , int pageSize) =>
             {
-                var products = await db.Products.ToListAsync();
+                var products = await db.Products.Skip((pageNumber-1)*pageSize).Take(pageSize).ToListAsync();
                 if (!products.Any())
                 {
                     return Results.NotFound("No Product Exists");
