@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using ProductCrudMinimalApi.EndPoints;
+using ProductCrudMinimalApi.Middlewares;
 using ProductCrudMinimalApi.Models;
 using ProductCrudMinimalApi.Models.Data;
 using ProductCrudMinimalApi.Models.DTO;
@@ -13,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("default")));
+builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
 
 var app = builder.Build();
 
@@ -24,7 +26,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 app.UseHttpsRedirection();
+
 
 app.MapProductEndpoints();
 
